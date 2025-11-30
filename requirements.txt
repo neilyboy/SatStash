@@ -1,0 +1,8 @@
+mutagen>=1.47
+requests>=2.31
+playwright>=1.46
+Pillow>=10.1
+python-Levenshtein>=0.25
+textual>=0.60
+fuzzywuzzy>=0.18
+rich>=13.7
