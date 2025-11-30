@@ -1714,7 +1714,9 @@ class SXMCli:
         self._save_scheduled_recording(channel, scheduled_time, duration, quality)
         
         print("\n✅ Recording scheduled!")
-        print("\n💡 To run scheduled recordings, use: ./sxm_cli.py --run-scheduled")
+        print("\n💡 To run scheduled recordings, start the scheduler:")
+        print("   - ./scripts/run_scheduler.sh  (manual)")
+        print("   - ./install.sh --install-service  (systemd user service)")
         input("\nPress Enter to continue...")
     
     def _save_scheduled_recording(self, channel, scheduled_time, duration, quality):
