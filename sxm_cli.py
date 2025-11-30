@@ -1484,11 +1484,10 @@ class SXMCli:
         if confirm != 'y':
             return
 
-        quality = self._select_quality()
-        
-        print("\n🚧 DVR download feature coming soon!")
-        print("For now, use the record_live feature to capture content.")
-        input("\nPress Enter to continue...")
+        # Reuse the unified DVR downloader so we get the same quality
+        # selection and recording behavior as individual-track downloads.
+        self._download_dvr_tracks(channel, selected_tracks)
+        return
     
     def _select_individual_tracks(self, channel, dvr_tracks):
         """Let user select individual tracks with pagination"""
@@ -1572,7 +1571,10 @@ class SXMCli:
         confirm = input(f"\nDownload these {len(selected_tracks)} tracks? (y/n): ").strip().lower()
         if confirm != 'y':
             return
-        
+
+        # Select audio quality once for this DVR recording session.
+        quality = self._select_quality()
+
         # Calculate time range for recording
         first_track = selected_tracks[0]
         last_track = selected_tracks[-1]
