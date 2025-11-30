@@ -262,6 +262,74 @@ class SXMCli:
 
         return None
 
+    def _browse_all_channels(self, channels: List[Dict]):
+        """Paginated browser for the full channel list.
+
+        When invoked from select_channel('list') it returns the selected
+        channel dict or None. When invoked from the main "Browse Channels"
+        menu, the return value is ignored and this acts as a read-only
+        browser.
+        """
+        if not channels:
+            print("\n❌ No channels available")
+            return None
+
+        # Sort by channel number then name for a stable, predictable view.
+        channels_sorted = sorted(
+            channels,
+            key=lambda ch: (ch.get('number') or 9999, ch.get('name', ''))
+        )
+
+        page_size = 20
+        total = len(channels_sorted)
+        page = 0
+
+        while True:
+            start = page * page_size
+            end = min(start + page_size, total)
+            if start >= total:
+                page = max(0, (total - 1) // page_size)
+                start = page * page_size
+                end = min(start + page_size, total)
+
+            print("\n📻 All Channels")
+            print("=" * 60)
+            total_pages = max(1, (total + page_size - 1) // page_size)
+            print(f"Page {page + 1}/{total_pages}  ·  {total} channels total\n")
+
+            for idx, ch in enumerate(channels_sorted[start:end], start + 1):
+                num = ch.get('number', '?')
+                name = ch.get('name', 'Unknown')
+                genre = ch.get('genre', 'Radio')
+                print(f"{idx:3d}. Ch {str(num):>4}  {name:<30}  {genre}")
+
+            print("\nCommands: [number] select · [n]ext · [p]rev · [q]uit")
+            cmd = input("> ").strip().lower()
+
+            if cmd in ("q", ""):
+                return None
+            if cmd == "n":
+                if end < total:
+                    page += 1
+                else:
+                    print("⚠️  Already on last page")
+                continue
+            if cmd == "p":
+                if page > 0:
+                    page -= 1
+                else:
+                    print("⚠️  Already on first page")
+                continue
+
+            if cmd.isdigit():
+                choice = int(cmd)
+                if 1 <= choice <= total:
+                    channel = channels_sorted[choice - 1]
+                    print(f"\n✅ Selected: {channel['name']} (Ch {channel.get('number', '?')})")
+                    return channel
+
+            print("❌ Invalid choice")
+
     def _select_quality(self, allow_default: bool = True) -> str:
         """Prompt for audio quality, defaulting to config setting"""
         default_quality = self.config.get('audio_quality', '256k')
