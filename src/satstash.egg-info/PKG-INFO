@@ -1,0 +1,57 @@
+Metadata-Version: 2.4
+Name: satstash
+Version: 0.1.0
+Summary: SatStash - SiriusXM Live + DVR + Scheduler + VOD
+Author: SatStash Contributors
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=2.31
+Requires-Dist: textual>=0.60
+Requires-Dist: rich>=13.7
+Requires-Dist: mutagen>=1.47
+Requires-Dist: Pillow>=10.1
+Requires-Dist: platformdirs>=4.0
+Provides-Extra: vod
+Requires-Dist: playwright>=1.46; extra == "vod"
+Dynamic: license-file
+
+# SatStash
+
+SatStash is a SiriusXM helper that supports:
+
+- Live playback
+- DVR browsing + recording (zero-partials)
+- Scheduling
+- VOD download
+
+## Install
+
+### pipx (recommended)
+
+```bash
+pipx install -e .
+```
+
+### venv
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+## Run
+
+```bash
+satstash
+```
+
+## Optional dependencies
+
+VOD browser automation (if needed):
+
+```bash
+pip install -e '.[vod]'
+```

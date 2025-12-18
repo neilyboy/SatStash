@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satstash"
+version = "0.1.0"
+description = "SatStash - SiriusXM Live + DVR + Scheduler + VOD"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "SatStash Contributors" }]
+dependencies = [
+  "requests>=2.31",
+  "textual>=0.60",
+  "rich>=13.7",
+  "mutagen>=1.47",
+  "Pillow>=10.1",
+  "platformdirs>=4.0",
+]
+
+[project.scripts]
+satstash = "satstash.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

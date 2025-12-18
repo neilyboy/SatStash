@@ -1,0 +1,9 @@
+requests>=2.31
+textual>=0.60
+rich>=13.7
+mutagen>=1.47
+Pillow>=10.1
+platformdirs>=4.0
+
+[vod]
+playwright>=1.46
