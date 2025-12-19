@@ -6048,13 +6048,18 @@ class RightIdleLogoPane(Widget):
         def work() -> None:
             rendered = ""
             try:
-                root = Path(__file__).resolve().parents[2]
-                logo_path = root / "logo.png"
-                if logo_path.exists():
-                    try:
-                        rendered = _render_png(logo_path)
-                    except Exception:
-                        rendered = ""
+                here = Path(__file__).resolve()
+                candidates = [
+                    here.parent / "logo.png",  # packaged install (src/satstash/logo.png)
+                    here.parents[2] / "logo.png",  # repo checkout (logo.png at project root)
+                ]
+                for logo_path in candidates:
+                    if logo_path.exists():
+                        try:
+                            rendered = _render_png(logo_path)
+                            break
+                        except Exception:
+                            rendered = ""
             except Exception:
                 rendered = ""
 
