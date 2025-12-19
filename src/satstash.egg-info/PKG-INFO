@@ -13,18 +13,20 @@ Requires-Dist: rich>=13.7
 Requires-Dist: mutagen>=1.47
 Requires-Dist: Pillow>=10.1
 Requires-Dist: platformdirs>=4.0
-Provides-Extra: vod
-Requires-Dist: playwright>=1.46; extra == "vod"
 Dynamic: license-file
 
-# SatStash
+# SatStash (Initial Release)
 
-SatStash is a SiriusXM helper that supports:
+SatStash is a terminal UI (TUI) helper for SiriusXM that supports:
 
 - Live playback
-- DVR browsing + recording (zero-partials)
+- DVR browsing + queue
+- Recording (single file or per-track)
+- Catch Up export
 - Scheduling
-- VOD download
+- VOD / AOD episode downloads (paste episode URL)
+
+This folder is a curated, GitHub-ready snapshot.
 
 ## Install
 
@@ -48,10 +50,34 @@ pip install -e .
 satstash
 ```
 
-## Optional dependencies
+## Settings
 
-VOD browser automation (if needed):
+Open **Settings** in the UI to configure:
 
-```bash
-pip install -e '.[vod]'
-```
+- **Output folder** (default: `~/Music/SiriusXM`)
+- Preferred quality (e.g. `256k`)
+
+## Where files are stored
+
+All media outputs are written under **Settings → Output folder** using these subfolders:
+
+- `Live/` — Record Now + scheduled recordings
+- `CatchUp/` — catch-up exports
+- `VOD/` — episode URL downloads
+
+## VOD / AOD
+
+VOD downloads do **not** require browser automation.
+
+Workflow:
+
+1. Open **VOD**
+2. Paste an episode URL like `https://www.siriusxm.com/player/episode-audio/entity/<id>`
+3. **Inspect** to load metadata and variants
+4. **Download** (single file) or **Download Split** (per-track files)
+
+## Docs
+
+- [Cheat Sheet](./docs/CHEAT_SHEET.md)
+- [DVR Browse + Queue User Guide](./docs/DVR_USAGE.md)
+- [Project README / deeper notes](./docs/README.md)

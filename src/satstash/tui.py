@@ -6061,7 +6061,7 @@ class RightIdleLogoPane(Widget):
                 for logo_path in candidates:
                     if logo_path.exists():
                         try:
-                            rendered = _image_to_rich_blocks_fit(logo_path, width=ww, height=wh, bg_rgb=(32, 35, 34))
+                            rendered = _image_to_rich_blocks_fit(logo_path, width=ww, height=wh, bg_rgb=(15, 18, 17))
                             break
                         except Exception:
                             rendered = ""
