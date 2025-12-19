@@ -63,8 +63,9 @@ class HlsProxy:
         except Exception:
             return self._last_seg_pdt
 
+        # Use request order, not sorted-by-PDT.
+        # Some players prefetch or retry, which can cause out-of-order PDT observations.
         try:
-            pdts.sort()
             idx = max(0, len(pdts) - 1 - max(0, int(behind_segments)))
             return pdts[idx]
         except Exception:
@@ -179,7 +180,13 @@ class HlsProxy:
                             with proxy._last_seg_lock:
                                 proxy._last_seg_pdt = seg_pdt
                                 try:
-                                    proxy._seg_pdts.append(seg_pdt)
+                                    # Keep a short, ordered, de-duped window of segment PDTs.
+                                    # Players can retry the same segment multiple times.
+                                    try:
+                                        if not proxy._seg_pdts or proxy._seg_pdts[-1] != seg_pdt:
+                                            proxy._seg_pdts.append(seg_pdt)
+                                    except Exception:
+                                        proxy._seg_pdts.append(seg_pdt)
                                 except Exception:
                                     pass
                         except Exception:

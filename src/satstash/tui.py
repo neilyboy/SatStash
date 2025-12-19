@@ -54,6 +54,11 @@ from rich.style import Style
 from rich.text import Text
 
 
+_BUILTIN_LOGO = """SATSTASH
+SIRIUSXM
+"""
+
+
 def _scheduled_recordings_path() -> Path:
     cfg_dir = Path(user_config_dir("satstash"))
     try:
@@ -6046,7 +6051,7 @@ class RightIdleLogoPane(Widget):
             return
 
         def work() -> None:
-            rendered = ""
+            rendered: object = ""
             try:
                 here = Path(__file__).resolve()
                 candidates = [
@@ -6056,12 +6061,15 @@ class RightIdleLogoPane(Widget):
                 for logo_path in candidates:
                     if logo_path.exists():
                         try:
-                            rendered = _render_png(logo_path)
+                            rendered = _image_to_rich_braille_fit(logo_path, width=ww, height=wh)
                             break
                         except Exception:
                             rendered = ""
             except Exception:
                 rendered = ""
+
+            if not rendered:
+                rendered = _BUILTIN_LOGO
 
             def ui() -> None:
                 try:
