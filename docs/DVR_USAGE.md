@@ -1,6 +1,6 @@
-# SatStash v3 — DVR Browse + Queue (User Guide)
+# SatStash — DVR Browse + Queue (User Guide)
 
-This document describes how to use the **Browse DVR** pane and the **DVR Queue** from the SatStash v3 TUI.
+This document describes how to use the **Browse DVR** pane and the **DVR Queue** from the SatStash TUI.
 
 ## Concepts
 

@@ -19,7 +19,7 @@ class PlayerCommand:
 def build_player_command(url: str) -> Optional[PlayerCommand]:
     """Return a command that plays the given URL.
 
-    For v3 we keep this simple: play the local proxy m3u8.
+    Keep this simple: play the local proxy m3u8.
     """
 
     if shutil.which("mpv"):

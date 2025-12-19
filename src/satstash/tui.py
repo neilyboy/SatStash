@@ -3070,7 +3070,7 @@ class VodPane(Container):
                 try:
                     client = self.app._get_client()
                     # For episodes, WEB manifests frequently point at non-existent keys (NoSuchKey).
-                    # FULL + V3 is consistently fetchable for both audio and video episodes.
+                    # FULL + HLS V3 is consistently fetchable for both audio and video episodes.
                     ts = client.tune_source(
                         entity_id=eid,
                         entity_type=entity_type,
@@ -6048,15 +6048,13 @@ class RightIdleLogoPane(Widget):
         def work() -> None:
             rendered = ""
             try:
-                # tui.py lives in SatStash_v3/src/satstash; logo.png is at SatStash_v3/logo.png
                 root = Path(__file__).resolve().parents[2]
                 logo_path = root / "logo.png"
                 if logo_path.exists():
-                    # Keep the classic half-block look (matches album art), just a bit smaller.
-                    tw = max(18, int(round(float(ww) * 0.72)))
-                    th = max(10, int(round(float(wh) * 0.72)))
-                    # Right pane background is #0f1211; composite/letterbox against that.
-                    rendered = _image_to_rich_blocks_fit(logo_path, width=tw, height=th, bg_rgb=(15, 18, 17))
+                    try:
+                        rendered = _render_png(logo_path)
+                    except Exception:
+                        rendered = ""
             except Exception:
                 rendered = ""
 

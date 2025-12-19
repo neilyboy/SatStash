@@ -1,6 +1,6 @@
-# SatStash v3 — Cheat Sheet (Keys by Screen)
+# SatStash — Cheat Sheet (Keys by Screen)
 
-This is the quick-reference key map for SatStash v3.
+This is the quick-reference key map for SatStash.
 
 ## Global keys (work everywhere)
 

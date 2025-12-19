@@ -1,6 +1,6 @@
 # Docs
 
-This folder contains user-facing documentation for the SatStash v3 release.
+This folder contains user-facing documentation for SatStash.
 
 - [Cheat Sheet (key map)](./CHEAT_SHEET.md)
 - [DVR Browse + Queue (User Guide)](./DVR_USAGE.md)

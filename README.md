@@ -1,4 +1,4 @@
-# SatStash v3 (Release)
+# SatStash (Initial Release)
 
 SatStash is a terminal UI (TUI) helper for SiriusXM that supports:
 
@@ -9,7 +9,7 @@ SatStash is a terminal UI (TUI) helper for SiriusXM that supports:
 - Scheduling
 - VOD / AOD episode downloads (paste episode URL)
 
-This `SatStash_Release/` folder is a curated, GitHub-ready snapshot.
+This folder is a curated, GitHub-ready snapshot.
 
 ## Install
 
