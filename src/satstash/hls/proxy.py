@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import threading
+from collections import deque
 from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
@@ -37,6 +38,7 @@ class HlsProxy:
         self._key_url: Optional[str] = None
         self._last_seg_pdt: Optional[datetime] = None
         self._last_seg_lock = threading.Lock()
+        self._seg_pdts: deque[datetime] = deque(maxlen=32)
 
     def last_segment_pdt(self) -> Optional[datetime]:
         try:
@@ -44,6 +46,29 @@ class HlsProxy:
                 return self._last_seg_pdt
         except Exception:
             return None
+
+    def playhead_pdt(self, *, behind_segments: int = 3) -> Optional[datetime]:
+        """Estimate the PDT of audio currently being heard.
+
+        Media players often prefetch future segments. Using the newest-requested segment
+        PDT can run the UI ahead of actual audio (early art/title flips, skipped bumpers).
+        We keep a rolling window of recently requested segment PDTs and return one a few
+        segments behind the newest.
+        """
+        try:
+            with self._last_seg_lock:
+                if not self._seg_pdts:
+                    return self._last_seg_pdt
+                pdts = list(self._seg_pdts)
+        except Exception:
+            return self._last_seg_pdt
+
+        try:
+            pdts.sort()
+            idx = max(0, len(pdts) - 1 - max(0, int(behind_segments)))
+            return pdts[idx]
+        except Exception:
+            return self._last_seg_pdt
 
     def start(self, host: str = "127.0.0.1", port: int = 0) -> ProxyInfo:
         proxy = self
@@ -153,6 +178,10 @@ class HlsProxy:
                         try:
                             with proxy._last_seg_lock:
                                 proxy._last_seg_pdt = seg_pdt
+                                try:
+                                    proxy._seg_pdts.append(seg_pdt)
+                                except Exception:
+                                    pass
                         except Exception:
                             pass
 

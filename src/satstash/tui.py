@@ -8068,7 +8068,7 @@ class CatchUpScreen(Screen[None]):
                                     elapsed = 0.0
                                 extra = ""
                                 try:
-                                    lpdt = handle_t.proxy.last_segment_pdt()
+                                    lpdt = handle_t.proxy.playhead_pdt(behind_segments=3)
                                     if isinstance(lpdt, datetime):
                                         try:
                                             off = float((lpdt - track_start).total_seconds())
@@ -11473,7 +11473,7 @@ class SatStashApp(App[None]):
 
                                 audio_now: Optional[datetime] = None
                                 try:
-                                    audio_now = handle.proxy.last_segment_pdt()
+                                    audio_now = handle.proxy.playhead_pdt(behind_segments=3)
                                 except Exception:
                                     audio_now = None
 
@@ -11743,7 +11743,7 @@ class SatStashApp(App[None]):
                 try:
                     lh = getattr(self, "_live_handle", None)
                     if lh is not None and getattr(lh, "proxy", None) is not None:
-                        audio_now = lh.proxy.last_segment_pdt()
+                        audio_now = lh.proxy.playhead_pdt(behind_segments=3)
                 except Exception:
                     audio_now = None
 
@@ -12005,7 +12005,7 @@ class SatStashApp(App[None]):
                     lh = getattr(self, "_live_handle", None)
                     pdt = None
                     if lh is not None and getattr(lh, "proxy", None) is not None:
-                        pdt = lh.proxy.last_segment_pdt()
+                        pdt = lh.proxy.playhead_pdt(behind_segments=3)
                     self._home_live_update_audio_anchor(pdt)
                     audio_now = self._home_live_audio_now_estimated() or pdt
                 except Exception:
@@ -12626,7 +12626,7 @@ class SatStashApp(App[None]):
                         # Choose item based on the actual audio time (proxy segment PDT).
                         audio_now: Optional[datetime] = None
                         try:
-                            audio_now = handle.proxy.last_segment_pdt()
+                            audio_now = handle.proxy.playhead_pdt(behind_segments=3)
                         except Exception:
                             audio_now = None
 
@@ -13718,7 +13718,7 @@ class NowPlayingScreen(Screen[None]):
             try:
                 lh = getattr(self.app, "_live_handle", None)
                 if lh is not None and getattr(lh, "proxy", None) is not None:
-                    audio_now = lh.proxy.last_segment_pdt()
+                    audio_now = lh.proxy.playhead_pdt(behind_segments=3)
             except Exception:
                 audio_now = None
 
@@ -14024,7 +14024,7 @@ class NowPlayingScreen(Screen[None]):
             try:
                 lh = getattr(self.app, "_live_handle", None)
                 if lh is not None and getattr(lh, "proxy", None) is not None:
-                    pdt = lh.proxy.last_segment_pdt()
+                    pdt = lh.proxy.playhead_pdt(behind_segments=3)
                     self._update_audio_anchor(pdt)
             except Exception:
                 pass
