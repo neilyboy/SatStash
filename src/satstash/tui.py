@@ -6061,7 +6061,7 @@ class RightIdleLogoPane(Widget):
                 for logo_path in candidates:
                     if logo_path.exists():
                         try:
-                            rendered = _image_to_rich_braille_fit(logo_path, width=ww, height=wh)
+                            rendered = _image_to_rich_blocks_fit(logo_path, width=ww, height=wh, bg_rgb=(32, 35, 34))
                             break
                         except Exception:
                             rendered = ""
