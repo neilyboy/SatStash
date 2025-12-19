@@ -9861,10 +9861,12 @@ class SatStashApp(App[None]):
         background: #0f1211;
         border-top: solid #2a2f2e;
         padding: 0 1;
+        overflow-x: auto;
     }
 
     #home_menu_row Button {
-        width: 1fr;
+        width: auto;
+        min-width: 12;
         margin: 0 1 0 0;
     }
 
@@ -11745,7 +11747,11 @@ class SatStashApp(App[None]):
                     self._home_live_update_audio_anchor(audio_now)
                 except Exception:
                     pass
-                audio_now_est = self._home_live_audio_now_estimated() or audio_now
+                # Use the proxy segment PDT for selecting metadata (conservative).
+                # An estimated/interpolated time can drift ahead and cause early track flips.
+                audio_now_select = audio_now
+                if audio_now_select is None:
+                    audio_now_select = self._home_live_audio_now_estimated()
 
                 parsed: list[tuple[Optional[datetime], dict]] = [(parse_item_dt(it), it) for it in items]
                 parsed = [p for p in parsed if p[0] is not None]
@@ -11753,7 +11759,7 @@ class SatStashApp(App[None]):
                 current: dict = items[-1]
                 start_dt: Optional[datetime] = None
                 if parsed:
-                    if audio_now_est is None:
+                    if audio_now_select is None:
                         current = parsed[-1][1]
                         start_dt = parsed[-1][0]
                     else:
@@ -11761,7 +11767,7 @@ class SatStashApp(App[None]):
                         for i, (dt, it) in enumerate(parsed):
                             if dt is None:
                                 continue
-                            if dt <= audio_now_est:
+                            if dt <= audio_now_select:
                                 chosen_i = i
                             else:
                                 break
@@ -13716,6 +13722,13 @@ class NowPlayingScreen(Screen[None]):
                 self._update_audio_anchor(audio_now)
             except Exception:
                 pass
+            # Use the proxy segment PDT for selecting metadata (conservative).
+            # Interpolated time can drift ahead and cause early track/art flips.
+            audio_now_select = audio_now
+            if audio_now_select is None:
+                audio_now_select = self._audio_now_estimated()
+
+            # Use interpolated time for progress ticking.
             audio_now_est = self._audio_now_estimated() or audio_now
 
             data = client.live_update(channel_id=self._channel.id)
@@ -13740,12 +13753,12 @@ class NowPlayingScreen(Screen[None]):
                 parsed = [p for p in parsed if p[0] is not None]
                 parsed.sort(key=lambda x: x[0] or datetime.min.replace(tzinfo=timezone.utc))
 
-                if audio_now_est is not None and parsed:
+                if audio_now_select is not None and parsed:
                     chosen_i = len(parsed) - 1
                     for i, (dt, it) in enumerate(parsed):
                         if dt is None:
                             continue
-                        if dt <= audio_now_est:
+                        if dt <= audio_now_select:
                             chosen_i = i
                         else:
                             break
